@@ -18,8 +18,9 @@ private:
     ~Logger();
     void operator=(Logger const&); 
     
-    LPWSTR getCurrentTime();
+    void getCurrentTime(wchar_t*);
 
 private:
     FILE* file;
+    wchar_t* timestr;
 };

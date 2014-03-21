@@ -11,25 +11,31 @@ Logger* Logger::getInstance(){
 
 Logger::Logger()
 {
+    timestr = new wchar_t[25];
 }
 
 Logger::~Logger()
 {
-    if (!file)
+    delete[] timestr;
+    timestr = nullptr;
+
+    if (file != nullptr)
         Stop();
 }
 
 void Logger::Start()
 {
     fopen_s(&file, "kfm.log", "w");
-    fputws(getCurrentTime(), file);
+    getCurrentTime(timestr);
+    fputws(timestr, file);
     fputws(L"Starting log...", file);
     fputws(L"\n", file);
 }
 
 void Logger::Stop()
 {
-    fputws(getCurrentTime(), file);
+    getCurrentTime(timestr);
+    fputws(timestr, file);
     fputws(L"Stopping log...", file);
     fputws(L"\n", file);
     fclose(file);
@@ -38,7 +44,8 @@ void Logger::Stop()
 
 void Logger::Error(LPWSTR str)
 {
-    fputws(getCurrentTime(), file);
+    getCurrentTime(timestr);
+    fputws(timestr, file);
     fputws(L"ERROR: ", file);
     fputws(str, file);
     fputws(L"\n", file);
@@ -46,13 +53,14 @@ void Logger::Error(LPWSTR str)
 
 void Logger::Info(LPWSTR str)
 {
-    fputws(getCurrentTime(), file);
+    getCurrentTime(timestr);
+    fputws(timestr, file);
     fputws(L"INFO: ", file);
     fputws(str, file);
     fputws(L"\n", file);
 }
 
-LPWSTR Logger::getCurrentTime()
+void Logger::getCurrentTime(wchar_t* dest)
 {
     time_t timer;
     tm tinfo;
@@ -60,7 +68,5 @@ LPWSTR Logger::getCurrentTime()
     time(&timer);
     localtime_s(&tinfo, &timer);
 
-    wchar_t dest[50] = { '\0' };
-    wcsftime(dest, 50, L"[%d.%m.%Y %H:%M:%S] ", &tinfo);
-    return dest;
+    wcsftime(dest, 25, L"[%d.%m.%Y %H:%M:%S] ", &tinfo);
 }
