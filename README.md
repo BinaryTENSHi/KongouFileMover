@@ -19,8 +19,9 @@ The idea is now to write a program, which takes a file name and moves it based o
 Example
 -------
 File name: "[HorribleSubs] Kill la Kill - 23 [1080p].mkv"<br>
-Regular expression:<br>
+Configuration:<br>
 ```
+root=M:\
 folder {
  remove \[\w*\]
  remove -.*
@@ -38,7 +39,6 @@ Usable methods:
 
 **Extensions will be ignored**
 
-Root folder: "M:\"<br>
 Generated folder: "M:\Kill la Kill\Kill la Kill - 23.mkv"
 
 Features
