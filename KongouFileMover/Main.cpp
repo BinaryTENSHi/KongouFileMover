@@ -1,5 +1,7 @@
 #include <windows.h>
+
 #include "Logger.h"
+#include "Configuration.h"
 
 void PrintUsage();
 
@@ -12,7 +14,9 @@ INT WINAPI WinMain(
     int argcount;
     LPWSTR* args = CommandLineToArgvW(GetCommandLine(), &argcount);
 
-    Logger* log = Logger::getInstance();
+    static Logger* log = Logger::getInstance();
+    static Configuration* config = Configuration::getInstance();
+
     log->Start();
 
     if (argcount == 1)
@@ -35,6 +39,18 @@ INT WINAPI WinMain(
             wcscat_s(dest, size, L"'");
             log->Info(dest);
             delete[] dest;
+
+            int res = config->Read(context);
+            if (res == 1)
+            {
+                MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+                return 0;
+            }
+            else if (res == 2)
+            {
+                MessageBox(NULL, L"Configuration could not be created.\nPlease make sure you have sufficient permissions.", L"Configuration", MB_OK | MB_ICONERROR);
+                return 1;
+            }
         }
         else if (wcscmp(str, L"-r") == 0)
         {

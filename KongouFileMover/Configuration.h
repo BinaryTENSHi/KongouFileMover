@@ -6,7 +6,7 @@ class Configuration
 {
 public:
     static Configuration* getInstance();
-    void Read(LPWSTR);
+    int Read(LPWSTR);
 
 private:
     Configuration();
