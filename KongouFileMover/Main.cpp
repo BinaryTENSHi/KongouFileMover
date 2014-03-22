@@ -20,7 +20,7 @@ INT WINAPI WinMain(
 
     log->Start();
 
-    if (argcount == 1)
+    if (argcount == 1 || wcsncmp(args[argcount - 1], L"-c:", 3) == 0)
     {
         PrintUsage();
         return 1;
