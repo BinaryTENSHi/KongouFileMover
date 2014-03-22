@@ -12,7 +12,7 @@ Logger* Logger::getInstance()
 
 Logger::Logger()
 {
-    timestr = new wchar_t[25];
+    timestr = new wchar_t[25]{'\0'};
 }
 
 Logger::~Logger()
