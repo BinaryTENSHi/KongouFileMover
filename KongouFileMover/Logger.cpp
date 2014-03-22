@@ -17,11 +17,14 @@ Logger::Logger()
 
 Logger::~Logger()
 {
-    delete[] timestr;
-    timestr = nullptr;
-
     if (file != nullptr)
         Stop();
+
+    if (timestr != nullptr)
+    {
+        delete[] timestr;
+        timestr = nullptr;
+    }
 }
 
 void Logger::Start()
@@ -40,7 +43,7 @@ void Logger::Stop()
     fputws(L"Stopping log...", file);
     fputws(L"\n", file);
     fclose(file);
-    file = 0;
+    file = nullptr;
 }
 
 void Logger::Error(LPWSTR str)
