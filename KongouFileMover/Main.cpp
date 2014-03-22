@@ -32,46 +32,56 @@ INT WINAPI WinMain(
     {
         if (wcsncmp(args[i], L"-c:", 3) == 0)
         {
-            wchar_t* str = wcstok_s(args[i], L":", &configFile);
-            wchar_t* setting = L"Setting custom config to '";
-            int size = wcslen(setting) + wcslen(configFile) + 2;
-            wchar_t* dest = new wchar_t[size]{'\0'};
-            wcscat_s(dest, size, setting);
-            wcscat_s(dest, size, configFile);
-            wcscat_s(dest, size, L"'");
-            log->Info(dest);
-            delete[] dest;
+            std::wstring configWString(configFile);
+            std::wstring infoWString = L"Using " + configWString + L" as root folder";
+            LPWSTR info = (LPWSTR)infoWString.c_str();
+            log->Info(info);
         }
     }
 
     int res = config->Read(configFile);
-    if (res == 1)
+    switch (res)
     {
-        HRSRC resourceInfo = FindResource(instance, MAKEINTRESOURCE(IDR_TEXT_DEFAULTCONFIG), L"TEXT");
-        if (!resourceInfo)
+    case 1:
         {
-            MessageBox(NULL, L"Default configuration not found.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            HRSRC resourceInfo = FindResource(instance, MAKEINTRESOURCE(IDR_TEXT_DEFAULTCONFIG), L"TEXT");
+            if (!resourceInfo)
+            {
+                MessageBox(NULL, L"Default configuration not found.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+                return 1;
+            }
+
+            HGLOBAL resource = LoadResource(instance, resourceInfo);
+            if (!resource)
+            {
+                MessageBox(NULL, L"Resource could not loaded.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+                return 1;
+            }
+
+            LPVOID memory = LockResource(resource);
+            DWORD size = SizeofResource(instance, resourceInfo);
+            DWORD written = -1;
+
+            HANDLE file = CreateFile(configFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL , NULL);
+            WriteFile(file, resource, size, &written, NULL);
+            CloseHandle(file);
+            FreeResource(resource);
+
+            MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            return 0;
+        }
+
+    case 2:
+        {
+            MessageBox(NULL, L"Configuration could not be read.", L"Configuration", MB_OK | MB_ICONINFORMATION);
             return 1;
         }
-        
-        HGLOBAL resource = LoadResource(instance, resourceInfo);
-        if (!resource)
+
+    case 3:
         {
-            MessageBox(NULL, L"Resource could not loaded.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            MessageBox(NULL, L"Root folder not configured or doesn't exist.", L"Configuration", MB_OK | MB_ICONINFORMATION);
             return 1;
         }
-
-        LPVOID memory = LockResource(resource);
-        DWORD size = SizeofResource(instance, resourceInfo);
-        DWORD written = 0;
-
-        HANDLE file = CreateFile(configFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-        WriteFile(file, resource, size, &written, NULL);
-        CloseHandle(file);
-        FreeResource(resource);
-
-        MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-        return 0;
     }
 
     LocalFree(args);
