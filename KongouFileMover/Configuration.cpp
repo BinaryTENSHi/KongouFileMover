@@ -2,7 +2,8 @@
 
 #include <fstream>
 
-Configuration* Configuration::getInstance(){
+Configuration* Configuration::getInstance()
+{
     static Configuration instance;
     return &instance;
 }
@@ -25,7 +26,7 @@ int Configuration::Read(LPWSTR filename)
         _wfopen_s(&file, filename, L"w");
         if (file == nullptr)
             return 2;
-        
+
         fputws(L"defaultConfig", file);
         fclose(file);
         return 1;

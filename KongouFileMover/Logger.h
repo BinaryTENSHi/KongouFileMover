@@ -16,8 +16,8 @@ public:
 private:
     Logger();
     ~Logger();
-    void operator=(Logger const&); 
-    
+    void operator=(Logger const&);
+
     void getCurrentTime(wchar_t*);
 
 private:

@@ -7,9 +7,9 @@ void PrintUsage();
 
 INT WINAPI WinMain(
     _In_ HINSTANCE instance,
-    _In_opt_ HINSTANCE previousInstance,
-    _In_ LPSTR commandline,
-    _In_ INT showCommand)
+         _In_opt_ HINSTANCE previousInstance,
+         _In_ LPSTR commandline,
+         _In_ INT showCommand)
 {
     int argcount;
     LPWSTR* args = CommandLineToArgvW(GetCommandLine(), &argcount);
@@ -76,9 +76,9 @@ INT WINAPI WinMain(
 void PrintUsage()
 {
     MessageBox(NULL,
-               L"KongouFileMover.exe [-c:configfile] [-r:regexfile] %filename%",
-               L"KongouFileMover usage",
-               MB_OK | MB_ICONINFORMATION);
+                   L"KongouFileMover.exe [-c:configfile] [-r:regexfile] %filename%",
+                   L"KongouFileMover usage",
+                   MB_OK | MB_ICONINFORMATION);
 
     PostQuitMessage(1);
 }

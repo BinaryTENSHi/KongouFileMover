@@ -12,6 +12,4 @@ private:
     Configuration();
     ~Configuration();
     void operator=(Configuration const&);
-
 };
-

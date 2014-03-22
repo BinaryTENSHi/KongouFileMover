@@ -4,7 +4,8 @@
 #include <fstream>
 #include <time.h>
 
-Logger* Logger::getInstance(){
+Logger* Logger::getInstance()
+{
     static Logger instance;
     return &instance;
 }
