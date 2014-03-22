@@ -24,49 +24,30 @@ INT WINAPI WinMain(
         PrintUsage();
     }
 
+    wchar_t* configFile = L"config.ini";
+
     for (int i = 1; i < argcount; ++i)
     {
-        wchar_t* context = (wchar_t*)malloc(sizeof(wchar_t));
-        wchar_t* str = wcstok_s(args[i], L":", &context);
-
-        if (wcscmp(str, L"-c") == 0)
+        if (wcsncmp(args[i], L"-c:", 3) == 0)
         {
-            wchar_t* setting = L"Setting Config to '";
-            int size = wcslen(setting) + wcslen(context) + 2;
+            wchar_t* str = wcstok_s(args[i], L":", &configFile);
+
+            wchar_t* setting = L"Setting custom config to '";
+            int size = wcslen(setting) + wcslen(configFile) + 2;
             wchar_t* dest = new wchar_t[size]{'\0'};
             wcscat_s(dest, size, setting);
-            wcscat_s(dest, size, context);
-            wcscat_s(dest, size, L"'");
-            log->Info(dest);
-            delete[] dest;
-
-            int res = config->Read(context);
-            if (res == 1)
-            {
-                MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-                return 0;
-            }
-            else if (res == 2)
-            {
-                MessageBox(NULL, L"Configuration could not be created.\nPlease make sure you have sufficient permissions.", L"Configuration", MB_OK | MB_ICONERROR);
-                return 1;
-            }
-        }
-        else if (wcscmp(str, L"-r") == 0)
-        {
-            wchar_t* setting = L"Setting Regex to '";
-            int size = wcslen(setting) + wcslen(context) + 2;
-            wchar_t* dest = new wchar_t[size]{'\0'};
-            wcscat_s(dest, size, setting);
-            wcscat_s(dest, size, context);
+            wcscat_s(dest, size, configFile);
             wcscat_s(dest, size, L"'");
             log->Info(dest);
             delete[] dest;
         }
-        else
-        {
-            PrintUsage();
-        }
+    }
+
+    int res = config->Read(configFile);
+    if (res == 1)
+    {
+        MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+        return 0;
     }
 
     LocalFree(args);
@@ -76,7 +57,7 @@ INT WINAPI WinMain(
 void PrintUsage()
 {
     MessageBox(NULL,
-                   L"KongouFileMover.exe [-c:configfile] [-r:regexfile] %filename%",
+                   L"KongouFileMover.exe [-c:configfile] %filename%",
                    L"KongouFileMover usage",
                    MB_OK | MB_ICONINFORMATION);
 
