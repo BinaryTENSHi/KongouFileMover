@@ -2,6 +2,7 @@
 
 #include "Logger.h"
 #include "Configuration.h"
+#include "Resource.h"
 
 void PrintUsage();
 
@@ -22,6 +23,7 @@ INT WINAPI WinMain(
     if (argcount == 1)
     {
         PrintUsage();
+        return 1;
     }
 
     wchar_t* configFile = L"config.ini";
@@ -31,7 +33,6 @@ INT WINAPI WinMain(
         if (wcsncmp(args[i], L"-c:", 3) == 0)
         {
             wchar_t* str = wcstok_s(args[i], L":", &configFile);
-
             wchar_t* setting = L"Setting custom config to '";
             int size = wcslen(setting) + wcslen(configFile) + 2;
             wchar_t* dest = new wchar_t[size]{'\0'};
@@ -46,12 +47,37 @@ INT WINAPI WinMain(
     int res = config->Read(configFile);
     if (res == 1)
     {
+        HRSRC resourceInfo = FindResource(instance, MAKEINTRESOURCE(IDR_TEXT_DEFAULTCONFIG), L"TEXT");
+        if (!resourceInfo)
+        {
+            MessageBox(NULL, L"Default configuration not found.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            return 1;
+        }
+        
+        HGLOBAL resource = LoadResource(instance, resourceInfo);
+        if (!resource)
+        {
+            MessageBox(NULL, L"Resource could not loaded.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            return 1;
+        }
+
+        LPVOID memory = LockResource(resource);
+        DWORD size = SizeofResource(instance, resourceInfo);
+        DWORD written = 0;
+
+        HANDLE file = CreateFile(configFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        WriteFile(file, resource, size, &written, NULL);
+        CloseHandle(file);
+        FreeResource(resource);
+
         MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
         return 0;
     }
 
     LocalFree(args);
     log->Stop();
+
+    return 0;
 }
 
 void PrintUsage()
@@ -60,8 +86,6 @@ void PrintUsage()
                    L"KongouFileMover.exe [-c:configfile] %filename%",
                    L"KongouFileMover usage",
                    MB_OK | MB_ICONINFORMATION);
-
-    PostQuitMessage(1);
 }
 
 /* Not yet used */

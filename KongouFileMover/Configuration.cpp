@@ -22,15 +22,7 @@ int Configuration::Read(LPWSTR filename)
     _wfopen_s(&file, filename, L"r");
 
     if (file == nullptr)
-    {
-        _wfopen_s(&file, filename, L"w");
-        if (file == nullptr)
-            return 2;
-
-        fputws(L"defaultConfig", file);
-        fclose(file);
         return 1;
-    }
 
     /* read config */
 
