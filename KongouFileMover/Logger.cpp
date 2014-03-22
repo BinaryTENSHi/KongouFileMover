@@ -29,7 +29,7 @@ Logger::~Logger()
 
 void Logger::Start()
 {
-    fopen_s(&file, "kfm.log", "w");
+    _wfopen_s(&file, L"kfm.log", L"w");
     getCurrentTime(timestr);
     fputws(timestr, file);
     fputws(L"Starting log...", file);
