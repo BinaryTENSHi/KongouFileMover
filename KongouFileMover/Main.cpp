@@ -20,7 +20,7 @@ INT WINAPI WinMain(
     static Logger* log = Logger::getInstance();
     static Configuration* config = Configuration::getInstance();
 
-    log->Start();
+    log->start();
 
     if (argcount == 1 || wcsncmp(args[argcount - 1], L"-c:", 3) == 0)
     {
@@ -36,7 +36,7 @@ INT WINAPI WinMain(
         {
             std::wstring configWString(configFile);
             std::wstring infoWString = L"Using " + configWString + L" as root folder";
-            log->Info(infoWString.c_str());
+            log->info(infoWString.c_str());
         }
     }
 
@@ -100,7 +100,7 @@ INT WINAPI WinMain(
         }
     }
 
-    log->Info(L"Config read. Interpreting folder expressions.");
+    log->info(L"Config read. Interpreting folder expressions.");
     Expression* folderExp = new Expression;
     res = folderExp->compile(config->folderContent);
 
@@ -108,18 +108,18 @@ INT WINAPI WinMain(
     {
     case EXPR_OK:
         {
-            log->Info(L"Found the following folder expressions:");
+            log->info(L"Found the following folder expressions:");
             std::vector<std::wstring>::iterator it = folderExp->expressions.end();
             while (it != folderExp->expressions.begin())
             {
                 --it;
-                log->Info((*it).c_str());
+                log->info((*it).c_str());
             }
             break;
         }
     }
 
-    log->Info(L"Interpreting file expressions.");
+    log->info(L"Interpreting file expressions.");
     Expression* fileExp = new Expression;
     res = fileExp->compile(config->fileContent);
 
@@ -127,12 +127,12 @@ INT WINAPI WinMain(
     {
     case EXPR_OK:
         {
-            log->Info(L"Found the following file expressions:");
+            log->info(L"Found the following file expressions:");
             std::vector<std::wstring>::iterator it = fileExp->expressions.end();
             while (it != fileExp->expressions.begin())
             {
                 --it;
-                log->Info((*it).c_str());
+                log->info((*it).c_str());
             }
             break;
         }
@@ -140,37 +140,37 @@ INT WINAPI WinMain(
 
     std::wstring folder(oriFile);
     folderExp->run(folder);
-    log->Info((L"Resulting folder: " + folder).c_str());
+    log->info((L"Resulting folder: " + folder).c_str());
 
     std::wstring file(oriFile);
     fileExp->run(file);
-    log->Info((L"Resulting file: " + file).c_str());
+    log->info((L"Resulting file: " + file).c_str());
 
-    wchar_t* path = new wchar_t[256];
+    wchar_t* path = new wchar_t[520];
     PathCombine(path, config->rootFolder.c_str(), folder.c_str());
-    log->Info(path);
+    log->info(path);
 
     if (!PathFileExists(path))
     {
-        log->Info(L"Creating folder...");
+        log->info(L"Creating folder...");
         if(!CreateDirectory(path, NULL))
         {
-            log->Error(L"Could not create directory");
+            log->error(L"Could not create directory");
             return 1;
         }
     }
 
     PathCombine(path, path, file.c_str());
-    log->Info(path);
-    log->Info(L"Moving file...");
+    log->info(path);
+    log->info(L"Moving file...");
 
     if(!MoveFile(oriPath.c_str(), path))
     {
-        log->Error(L"Failed to move file...");
+        log->error(L"Failed to move file...");
         return 1;
     }
-    
-    log->Stop();
+
+    log->stop();
     delete[] path;
     delete folderExp;
     delete fileExp;

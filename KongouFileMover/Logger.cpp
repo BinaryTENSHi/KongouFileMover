@@ -18,7 +18,7 @@ Logger::Logger()
 Logger::~Logger()
 {
     if (file != nullptr)
-        Stop();
+        stop();
 
     if (timestr != nullptr)
     {
@@ -27,7 +27,7 @@ Logger::~Logger()
     }
 }
 
-void Logger::Start()
+void Logger::start()
 {
     _wfopen_s(&file, L"kfm.log", L"w");
     getCurrentTime(timestr);
@@ -36,7 +36,7 @@ void Logger::Start()
     fputws(L"\n", file);
 }
 
-void Logger::Stop()
+void Logger::stop()
 {
     getCurrentTime(timestr);
     fputws(timestr, file);
@@ -46,7 +46,7 @@ void Logger::Stop()
     file = nullptr;
 }
 
-void Logger::Error(LPCWSTR str)
+void Logger::error(LPCWSTR str)
 {
     getCurrentTime(timestr);
     fputws(timestr, file);
@@ -55,7 +55,7 @@ void Logger::Error(LPCWSTR str)
     fputws(L"\n", file);
 }
 
-void Logger::Info(LPCWSTR str)
+void Logger::info(LPCWSTR str)
 {
     getCurrentTime(timestr);
     fputws(timestr, file);

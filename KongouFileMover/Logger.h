@@ -7,11 +7,11 @@ class Logger
 {
 public:
     static Logger* getInstance();
-    void Start();
-    void Stop();
+    void start();
+    void stop();
 
-    void Error(LPCWSTR);
-    void Info(LPCWSTR);
+    void error(LPCWSTR);
+    void info(LPCWSTR);
 
 private:
     Logger();
