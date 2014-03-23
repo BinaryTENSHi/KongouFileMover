@@ -23,7 +23,7 @@ INT WINAPI WinMain(
     static Configuration* config = Configuration::getInstance();
 
     log->start();
-    
+
     wchar_t* configFile = L"config.ini";
 
     for (int i = 1; i < argcount; ++i)
@@ -127,6 +127,16 @@ INT WINAPI WinMain(
             }
             break;
         }
+    case EXPR_ERROR_REM:
+        {
+            log->error(L"A remove expression is not correct. (remove $regex)");
+            return 1;
+        }
+    case EXPR_ERROR_REP:
+        {
+            log->error(L"A replace expression is not correct. (replace $regex,'$value')");
+            return 1;
+        }
     }
 
     log->info(L"Interpreting file expressions.");
@@ -145,6 +155,16 @@ INT WINAPI WinMain(
                 log->info((*it).c_str());
             }
             break;
+        }
+    case EXPR_ERROR_REM:
+        {
+            log->error(L"A remove expression is not correct. (remove $regex)");
+            return 1;
+        }
+    case EXPR_ERROR_REP:
+        {
+            log->error(L"A replace expression is not correct. (replace $regex,'$value'");
+            return 1;
         }
     }
 

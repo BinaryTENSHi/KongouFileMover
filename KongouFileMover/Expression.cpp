@@ -23,7 +23,29 @@ int Expression::compile(std::wstring input)
     std::vector<std::wstring>::iterator it = expressions.begin();
 
     while ((res = wcstok_s(context, L"\r\n", &context)) != nullptr)
-        it = expressions.insert(it, trim(std::wstring(res)));
+    {
+        std::wstring s = trim(std::wstring(res));
+
+        if (s.find(L"remove") == 0)
+        {
+            if (s.length() < 7)
+                return EXPR_ERROR_REM;
+
+            if (trim(s.substr(7, s.length() - 7)).empty())
+                return EXPR_ERROR_REM;
+        }
+        else if (s.find(L"replace") == 0)
+        {
+            if (s.length() < 8)
+                return EXPR_ERROR_REP;
+
+            std::wstring ws = trim(s.substr(8, s.length() - 8));
+            if (ws.empty() || ws.find(L"'") == -1)
+                return EXPR_ERROR_REP;
+        }
+
+        it = expressions.insert(it, s);
+    }
 
     return EXPR_OK;
 }

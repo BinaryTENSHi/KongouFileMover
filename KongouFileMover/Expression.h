@@ -5,7 +5,8 @@
 #include <vector>
 
 #define EXPR_OK 0
-#define EXPR_ERROR 1
+#define EXPR_ERROR_REM 1
+#define EXPR_ERROR_REP 2
 
 class Expression
 {
