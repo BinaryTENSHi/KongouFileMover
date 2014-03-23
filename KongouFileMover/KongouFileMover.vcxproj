@@ -90,6 +90,7 @@
     <ClInclude Include="Expression.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="StringExtension.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

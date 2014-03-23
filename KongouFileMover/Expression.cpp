@@ -1,4 +1,6 @@
 #include "Expression.h"
+#include "StringExtension.h"
+
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -14,14 +16,14 @@ Expression::~Expression()
 
 int Expression::compile(std::wstring input)
 {
-    input.erase(std::remove(input.begin(), input.end(), ' '), input.end());
+    trim(input);
     wchar_t* context = &input[0];
     wchar_t* res = L"";
 
     std::vector<std::wstring>::iterator it = expressions.begin();
 
     while ((res = wcstok_s(context, L"\r\n", &context)) != nullptr)
-        it = expressions.insert(it, res);
+        it = expressions.insert(it, trim(std::wstring(res)));
 
     return EXPR_OK;
 }
@@ -37,14 +39,23 @@ void Expression::run(std::wstring& input)
 
         if (command.find(L"remove") == 0)
         {
-            std::wregex regex(command.substr(6, command.length()));
+            std::wregex regex(command.substr(7, command.length()));
             input = std::regex_replace(input, regex, L"");
         }
         else if (command.find(L"replace") == 0)
         {
-            /* to do */
+            std::wstring r = command.substr(8, command.length() - 8);
+            int fc = r.find_first_of(',');
+            std::wregex regex(r.substr(0, fc));
+            std::wstring re(r.substr(fc + 1, r.length() - fc - 1));
+            int f = re.find_first_of(L"'");
+            int l = re.find_last_of(L"'");
+            if (f != -1 && l != -1)
+                re = re.substr(f + 1, l - (f + 1));
+
+            input = std::regex_replace(input, regex, re);
         }
-        if (command.find(L"trim") == 0)
+        else if (command.find(L"trim") == 0)
         {
             int ld = input.find_last_of('.');
             std::wstring end;
@@ -55,18 +66,7 @@ void Expression::run(std::wstring& input)
                 input = input.substr(0, ld);
             }
 
-            std::wstring::size_type pos = input.find_last_not_of(' ');
-
-            if (pos != std::wstring::npos)
-            {
-                input.erase(pos + 1);
-                pos = input.find_first_not_of(' ');
-                if (pos != std::wstring::npos) input.erase(0, pos);
-            }
-            else
-            {
-                input.erase(input.begin(), input.end());
-            }
+            trim(input);
 
             if (ld != -1)
                 input += L"." + end;
