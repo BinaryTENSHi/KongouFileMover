@@ -168,6 +168,9 @@ INT WINAPI WinMain(
         }
     }
 
+    std::wstring info = L"Processing file " + oriPath;
+    log->info(info.c_str());
+
     std::wstring folder(oriFile);
     folderExp->run(folder);
     log->info((L"Resulting folder: " + folder).c_str());
