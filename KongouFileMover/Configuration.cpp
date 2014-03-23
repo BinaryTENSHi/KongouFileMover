@@ -30,40 +30,75 @@ int Configuration::Read(LPWSTR filename)
     HANDLE file = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL , NULL);
 
     if (file == INVALID_HANDLE_VALUE)
-        return 1;
+        return CONFIG_NOTAVAILABLE;
 
     DWORD size = GetFileSize(file, &size);
     char* dataArr = new char[size]{'\0'};
     DWORD read = 0;
 
     if (!ReadFile(file, dataArr, size, &read, NULL))
-        return 2;
+        return CONFIG_NOTREAD;
 
     CloseHandle(file);
     std::string data = std::string(dataArr);
+    std::string subData = "";
     delete[] dataArr;
 
-    std::regex rootPattern("^root=\\w:(\\w|\\W)*?\r\n");
+    std::regex pattern("^root=\\w:(\\w|\\W)*?\r\n");
     std::smatch match;
-    bool root = false;
+    bool res = false;
 
-    if (std::regex_search(data, match, rootPattern))
+    if (std::regex_search(data, match, pattern))
     {
         USES_CONVERSION;
 #pragma warning(suppress: 6255)
-        rootFolder = A2W(data.substr(5, match.length() - 7).c_str());
+        rootFolder = A2W(data.substr(match.prefix().length() + 5, match.length() - 7).c_str());
 
         if (PathFileExists(rootFolder))
-            root = true;
+            res = true;
     }
 
-    if (!root)
-        return 3;
+    if (!res)
+        return CONFIG_NOROOT;
+
+    pattern = std::regex("^folder( |\r\n)*\\{(.|\r\n)*?\\}");
+    if (std::regex_search(data, match, pattern))
+    {
+        pattern = std::regex("\\{(.|\r\n)*?\\}");
+        subData = data.substr(match.prefix().length(), match.length());
+        std::regex_search(subData, match, pattern);
+
+        USES_CONVERSION;
+#pragma warning(suppress: 6255)
+        folderContent = A2W(subData.substr(match.prefix().length() + 1, match.length() - 2).c_str());
+
+        res = true;
+    }
+
+    if (!res)
+        return CONFIG_NOFOLDER;
+
+    pattern = std::regex("^file( |\r\n)*\\{(.|\r\n)*?\\}");
+    if (std::regex_search(data, match, pattern))
+    {
+        pattern = std::regex("\\{(.|\r\n)*?\\}");
+        subData = data.substr(match.prefix().length(), match.length());
+        std::regex_search(subData, match, pattern);
+
+        USES_CONVERSION;
+#pragma warning(suppress: 6255)
+        fileContent = A2W(subData.substr(match.prefix().length() + 1, match.length() - 2).c_str());
+
+        res = true;
+    }
+
+    if (!res)
+        return CONFIG_NOFILE;
 
     std::wstring rootWstring(rootFolder);
     std::wstring concatString = L"Using " + rootWstring + L" as root folder";
     LPWSTR info = (LPWSTR)concatString.c_str();
     log->Info(info);
 
-    return 0;
+    return CONFIG_OK;
 }

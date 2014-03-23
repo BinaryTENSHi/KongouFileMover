@@ -42,7 +42,7 @@ INT WINAPI WinMain(
     int res = config->Read(configFile);
     switch (res)
     {
-    case 1:
+    case CONFIG_NOTAVAILABLE:
         {
             HRSRC resourceInfo = FindResource(instance, MAKEINTRESOURCE(IDR_TEXT_DEFAULTCONFIG), L"TEXT");
             if (!resourceInfo)
@@ -71,15 +71,25 @@ INT WINAPI WinMain(
             return 0;
         }
 
-    case 2:
+    case CONFIG_NOTREAD:
         {
             MessageBox(NULL, L"Configuration could not be read.", L"Configuration", MB_OK | MB_ICONINFORMATION);
             return 1;
         }
 
-    case 3:
+    case CONFIG_NOROOT:
         {
             MessageBox(NULL, L"Root folder not configured or doesn't exist.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            return 1;
+        }
+    case CONFIG_NOFOLDER:
+        {
+            MessageBox(NULL, L"No folder expressions configured.", L"Configuration", MB_OK | MB_ICONINFORMATION);
+            return 1;
+        }
+    case CONFIG_NOFILE:
+        {
+            MessageBox(NULL, L"No file expressions configured.", L"Configuration", MB_OK | MB_ICONINFORMATION);
             return 1;
         }
     }
