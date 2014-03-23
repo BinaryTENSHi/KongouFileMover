@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Kongoufilemover by BinaryTENSHi</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/BinaryTENSHi/KongouFileMover">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/BinaryTENSHi/KongouFileMover/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/BinaryTENSHi/KongouFileMover/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Kongoufilemover</h1>
+          <p>A utility program, which moves and renames files based on custom regular expressions.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/BinaryTENSHi">BinaryTENSHi</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="kongoufilemover" class="anchor" href="#kongoufilemover"><span class="octicon octicon-link"></span></a>KongouFileMover</h1>
+
+<p><em>A utility program, which moves and renames files based on custom regular expressions.</em></p>
+
+<p><em>Warning: This is my first and (somewhat) usable program written in C++. Please don't cringe about horrible code.</em><br><strong><em>You have been warned</em></strong></p>
+
+<h2>
+<a name="the-idea-behind-kfm" class="anchor" href="#the-idea-behind-kfm"><span class="octicon octicon-link"></span></a>The idea behind KFM</h2>
+
+<p>Whenever I've downloaded Anime episodes with uTorrent (<em>don't sue me</em>), some things bugged me.<br>
+Since I have a dedicated partition with all my series on it, I wanted to automate the downloading, moving and renaming of weekly series.</p>
+
+<ul>
+<li>Automated downloading was no problem, thanks to <a href="http://www.shanaproject.com/" title="ShanaProject">ShanaProject</a>.</li>
+<li>Moving wouldn't be a problem too, since uTorrent supports moving files after they're successfully downloaded.<br><em>Unfortunately, you can't rename or move them based on their name.</em>
+</li>
+</ul><p>The idea is now to write a program, which takes a file name and moves it based on a preconfigured regular expression into a root folder and sub folder.</p>
+
+<h2>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<p>File name: "[HorribleSubs] Kill la Kill - 23 [1080p].mkv"<br>
+Configuration:<br></p>
+
+<pre><code>root=M:\
+folder {
+ remove \[\w*\]
+ remove -.*
+ trim
+}
+file {
+ remove \[\w*\]
+ trim
+}
+</code></pre>
+
+<p>Usable methods:</p>
+
+<ul>
+<li>remove</li>
+<li>replace</li>
+<li>trim</li>
+</ul><p><strong>Extensions will be ignored</strong></p>
+
+<p>Generated folder: "M:\Kill la Kill\Kill la Kill - 23.mkv"</p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<ul>
+<li>Custom regular expressions</li>
+<li>Progress notifications as popups</li>
+<li>Switch the graphic on the popup</li>
+</ul><p>Why Kongou you ask? I like the name. That's all.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
