@@ -33,8 +33,8 @@ file {
 }
 ```
 Usable methods:
-- remove
-- replace
+- remove *$regex*
+- replace *$regex*,*'$value'*
 - trim
 
 **Extensions will be ignored**
