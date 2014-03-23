@@ -162,11 +162,14 @@ INT WINAPI WinMain(
 
     if (!PathFileExists(path))
     {
-        log->info(L"Creating folder...");
-        if(!CreateDirectory(path, NULL))
+        if (move)
         {
-            log->error(L"Could not create directory");
-            return 1;
+            log->info(L"Creating folder...");
+            if (!CreateDirectory(path, NULL))
+            {
+                log->error(L"Could not create directory");
+                return 1;
+            }
         }
     }
 
