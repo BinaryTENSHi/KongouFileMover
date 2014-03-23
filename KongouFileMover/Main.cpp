@@ -14,6 +14,8 @@ INT WINAPI WinMain(
          _In_ LPSTR commandline,
          _In_ INT showCommand)
 {
+    bool move = false;
+    bool hasFile = false;
     int argcount;
     LPWSTR* args = CommandLineToArgvW(GetCommandLine(), &argcount);
 
@@ -21,13 +23,7 @@ INT WINAPI WinMain(
     static Configuration* config = Configuration::getInstance();
 
     log->start();
-
-    if (argcount == 1 || wcsncmp(args[argcount - 1], L"-c:", 3) == 0)
-    {
-        PrintUsage();
-        return 1;
-    }
-
+    
     wchar_t* configFile = L"config.ini";
 
     for (int i = 1; i < argcount; ++i)
@@ -38,6 +34,20 @@ INT WINAPI WinMain(
             std::wstring infoWString = L"Using " + configWString + L" as root folder";
             log->info(infoWString.c_str());
         }
+        else if (wcsncmp(args[i], L"-x", 2) == 0)
+        {
+            move = true;
+        }
+        else
+        {
+            hasFile = true;
+        }
+    }
+
+    if (!hasFile)
+    {
+        PrintUsage();
+        return 1;
     }
 
     std::wstring oriPath(args[argcount - 1]);
@@ -162,12 +172,20 @@ INT WINAPI WinMain(
 
     PathCombine(path, path, file.c_str());
     log->info(path);
-    log->info(L"Moving file...");
 
-    if(!MoveFile(oriPath.c_str(), path))
+    if (move)
     {
-        log->error(L"Failed to move file...");
-        return 1;
+        log->info(L"Moving file...");
+
+        if(!MoveFile(oriPath.c_str(), path))
+        {
+            log->error(L"Failed to move file...");
+            return 1;
+        }
+    }
+    else
+    {
+        log->info(L"Moving is disabled!");
     }
 
     log->stop();
@@ -180,7 +198,7 @@ INT WINAPI WinMain(
 void PrintUsage()
 {
     MessageBox(NULL,
-                   L"KongouFileMover.exe [-c:configfile] %filename%",
+                   L"KongouFileMover.exe [-c:configfile] [-x] %filename%",
                    L"KongouFileMover usage",
                    MB_OK | MB_ICONINFORMATION);
 }
