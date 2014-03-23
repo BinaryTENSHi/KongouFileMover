@@ -36,8 +36,7 @@ Usable methods:
 - remove *$regex*
 - replace *$regex*,*'$value'*
 - trim
-
-**Extensions will be ignored**
+  *ignores the file extension*
 
 Generated folder: "M:\Kill la Kill\Kill la Kill - 23.mkv"
 
