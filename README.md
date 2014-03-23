@@ -23,12 +23,12 @@ Configuration:<br>
 ```
 root=M:\
 folder {
- remove \[\w*\]
- remove -.*
+ remove \[.*?\]
+ remove \s-\s.*
  trim
 }
 file {
- remove \[\w*\]
+ remove \[.*?\]
  trim
 }
 ```
