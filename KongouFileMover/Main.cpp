@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <shlwapi.h>
 
 #include "Logger.h"
 #include "Configuration.h"
@@ -137,15 +138,40 @@ INT WINAPI WinMain(
         }
     }
 
-    std::wstring in(oriFile);
-    folderExp->run(in);
-    log->Info(in.c_str());
+    std::wstring folder(oriFile);
+    folderExp->run(folder);
+    log->Info((L"Resulting folder: " + folder).c_str());
 
-    in = std::wstring(oriFile);
-    fileExp->run(in);
-    log->Info(in.c_str());
+    std::wstring file(oriFile);
+    fileExp->run(file);
+    log->Info((L"Resulting file: " + file).c_str());
 
+    wchar_t* path = new wchar_t[256];
+    PathCombine(path, config->rootFolder.c_str(), folder.c_str());
+    log->Info(path);
+
+    if (!PathFileExists(path))
+    {
+        log->Info(L"Creating folder...");
+        if(!CreateDirectory(path, NULL))
+        {
+            log->Error(L"Could not create directory");
+            return 1;
+        }
+    }
+
+    PathCombine(path, path, file.c_str());
+    log->Info(path);
+    log->Info(L"Moving file...");
+
+    if(!MoveFile(oriPath.c_str(), path))
+    {
+        log->Error(L"Failed to move file...");
+        return 1;
+    }
+    
     log->Stop();
+    delete[] path;
     delete folderExp;
     delete fileExp;
     return 0;

@@ -53,11 +53,10 @@ int Configuration::read(LPCWSTR filename)
 
     if (std::regex_search(data, match, pattern))
     {
-        USES_CONVERSION;
-#pragma warning(suppress: 6255)
-        rootFolder = A2W(data.substr(match.prefix().length() + 5, match.length() - 7).c_str());
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        rootFolder = converter.from_bytes(data.substr(match.prefix().length() + 5, match.length() - 7));
 
-        if (PathFileExists(rootFolder))
+        if (PathFileExists(rootFolder.c_str()))
             res = true;
     }
 

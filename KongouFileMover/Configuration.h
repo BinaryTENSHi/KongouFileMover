@@ -15,7 +15,7 @@ class Configuration
 public:
     static Configuration* getInstance();
     int read(LPCWSTR);
-    LPCWSTR rootFolder;
+    std::wstring rootFolder;
     std::wstring folderContent;
     std::wstring fileContent;
 
