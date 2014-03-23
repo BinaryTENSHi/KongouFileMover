@@ -8,6 +8,9 @@
 #include <regex>
 #include <atlconv.h>
 #include <Shlwapi.h>
+#include <locale>
+#include <codecvt>
+#include <string>
 
 Configuration* Configuration::getInstance()
 {
@@ -23,7 +26,7 @@ Configuration::~Configuration()
 {
 }
 
-int Configuration::Read(LPWSTR filename)
+int Configuration::read(LPCWSTR filename)
 {
     Logger* log = Logger::getInstance();
 
@@ -68,9 +71,8 @@ int Configuration::Read(LPWSTR filename)
         subData = data.substr(match.prefix().length(), match.length());
         std::regex_search(subData, match, pattern);
 
-        USES_CONVERSION;
-#pragma warning(suppress: 6255)
-        folderContent = A2W(subData.substr(match.prefix().length() + 1, match.length() - 2).c_str());
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        folderContent = converter.from_bytes(subData.substr(match.prefix().length() + 1, match.length() - 2));
 
         res = true;
     }
@@ -85,9 +87,8 @@ int Configuration::Read(LPWSTR filename)
         subData = data.substr(match.prefix().length(), match.length());
         std::regex_search(subData, match, pattern);
 
-        USES_CONVERSION;
-#pragma warning(suppress: 6255)
-        fileContent = A2W(subData.substr(match.prefix().length() + 1, match.length() - 2).c_str());
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        fileContent = converter.from_bytes(subData.substr(match.prefix().length() + 1, match.length() - 2));
 
         res = true;
     }

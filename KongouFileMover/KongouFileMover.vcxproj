@@ -81,11 +81,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="Expression.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Configuration.h" />
+    <ClInclude Include="Expression.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Resource.h" />
   </ItemGroup>

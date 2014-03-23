@@ -46,7 +46,7 @@ void Logger::Stop()
     file = nullptr;
 }
 
-void Logger::Error(LPWSTR str)
+void Logger::Error(LPCWSTR str)
 {
     getCurrentTime(timestr);
     fputws(timestr, file);
@@ -55,7 +55,7 @@ void Logger::Error(LPWSTR str)
     fputws(L"\n", file);
 }
 
-void Logger::Info(LPWSTR str)
+void Logger::Info(LPCWSTR str)
 {
     getCurrentTime(timestr);
     fputws(timestr, file);

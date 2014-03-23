@@ -14,10 +14,10 @@ class Configuration
 {
 public:
     static Configuration* getInstance();
-    int Read(LPWSTR);
+    int read(LPCWSTR);
     LPCWSTR rootFolder;
-    LPCWSTR folderContent;
-    LPCWSTR fileContent;
+    std::wstring folderContent;
+    std::wstring fileContent;
 
 private:
     Configuration();

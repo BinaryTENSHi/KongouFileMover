@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "Configuration.h"
 #include "Resource.h"
+#include "Expression.h"
 
 void PrintUsage();
 
@@ -34,12 +35,13 @@ INT WINAPI WinMain(
         {
             std::wstring configWString(configFile);
             std::wstring infoWString = L"Using " + configWString + L" as root folder";
-            LPWSTR info = (LPWSTR)infoWString.c_str();
-            log->Info(info);
+            log->Info(infoWString.c_str());
         }
     }
 
-    int res = config->Read(configFile);
+    LocalFree(args);
+
+    int res = config->read(configFile);
     switch (res)
     {
     case CONFIG_NOTAVAILABLE:
@@ -94,9 +96,48 @@ INT WINAPI WinMain(
         }
     }
 
-    LocalFree(args);
+    log->Info(L"Config read. Interpreting folder expressions.");
+    Expression* folderExp = new Expression;
+    res = folderExp->compile(config->folderContent);
+
+    switch (res)
+    {
+    case EXPR_OK:
+        {
+            log->Info(L"Found the following folder expressions:");
+            std::vector<std::wstring>::iterator it = folderExp->expressions.end();
+            while (it != folderExp->expressions.begin())
+            {
+                --it;
+                log->Info((*it).c_str());
+            }
+            break;
+        }
+    }
+
+    log->Info(L"Interpreting file expressions.");
+    Expression* fileExp = new Expression;
+    res = fileExp->compile(config->fileContent);
+
+    switch (res)
+    {
+    case EXPR_OK:
+        {
+            log->Info(L"Found the following file expressions:");
+            std::vector<std::wstring>::iterator it = fileExp->expressions.end();
+            while (it != fileExp->expressions.begin())
+            {
+                --it;
+                log->Info((*it).c_str());
+            }
+            break;
+        }
+    }
+
     log->Stop();
 
+    delete folderExp;
+    delete fileExp;
     return 0;
 }
 

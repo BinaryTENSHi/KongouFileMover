@@ -10,8 +10,8 @@ public:
     void Start();
     void Stop();
 
-    void Error(LPWSTR);
-    void Info(LPWSTR);
+    void Error(LPCWSTR);
+    void Info(LPCWSTR);
 
 private:
     Logger();
