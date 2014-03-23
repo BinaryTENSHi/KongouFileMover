@@ -13,6 +13,7 @@ public:
     Expression();
     ~Expression();
     int compile(std::wstring);
+    void run(std::wstring&);
 
 public:
     std::vector<std::wstring> expressions;

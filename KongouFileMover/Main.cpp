@@ -39,6 +39,9 @@ INT WINAPI WinMain(
         }
     }
 
+    std::wstring oriPath(args[argcount - 1]);
+    std::wstring oriFile(oriPath.substr(oriPath.find_last_of(L"\\") + 1, oriPath.length()));
+
     LocalFree(args);
 
     int res = config->read(configFile);
@@ -134,8 +137,15 @@ INT WINAPI WinMain(
         }
     }
 
-    log->Stop();
+    std::wstring in(oriFile);
+    folderExp->run(in);
+    log->Info(in.c_str());
 
+    in = std::wstring(oriFile);
+    fileExp->run(in);
+    log->Info(in.c_str());
+
+    log->Stop();
     delete folderExp;
     delete fileExp;
     return 0;
