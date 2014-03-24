@@ -10,8 +10,8 @@ public:
     void start();
     void stop();
 
-    void error(LPCWSTR);
-    void info(LPCWSTR);
+    void error(std::wstring);
+    void info(std::wstring);
 
 private:
     Logger();

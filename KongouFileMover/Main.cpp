@@ -30,9 +30,7 @@ INT WINAPI WinMain(
     {
         if (wcsncmp(args[i], L"-c:", 3) == 0)
         {
-            std::wstring configWString(configFile);
-            std::wstring infoWString = L"Using " + configWString + L" as root folder";
-            log->info(infoWString.c_str());
+            log->info(L"Using " + std::wstring(configFile) + L" as root folder");
         }
         else if (wcsncmp(args[i], L"-x", 2) == 0)
         {
@@ -168,16 +166,15 @@ INT WINAPI WinMain(
         }
     }
 
-    std::wstring info = L"Processing file " + oriPath;
-    log->info(info.c_str());
+    log->info(L"Processing file " + oriPath);
 
     std::wstring folder(oriFile);
     folderExp->run(folder);
-    log->info((L"Resulting folder: " + folder).c_str());
+    log->info(L"Resulting folder: " + folder);
 
     std::wstring file(oriFile);
     fileExp->run(file);
-    log->info((L"Resulting file: " + file).c_str());
+    log->info(L"Resulting file: " + file);
 
     wchar_t* path = new wchar_t[520];
     PathCombine(path, config->rootFolder.c_str(), folder.c_str());

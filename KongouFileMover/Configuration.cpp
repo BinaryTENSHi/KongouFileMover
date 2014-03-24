@@ -95,10 +95,7 @@ int Configuration::read(LPCWSTR filename)
     if (!res)
         return CONFIG_NOFILE;
 
-    std::wstring rootWstring(rootFolder);
-    std::wstring concatString = L"Using " + rootWstring + L" as root folder";
-    LPWSTR info = (LPWSTR)concatString.c_str();
-    log->info(info);
+    log->info(L"Using " + std::wstring(rootFolder) + L" as root folder");
 
     return CONFIG_OK;
 }

@@ -46,21 +46,21 @@ void Logger::stop()
     file = nullptr;
 }
 
-void Logger::error(LPCWSTR str)
+void Logger::error(std::wstring str)
 {
     getCurrentTime(timestr);
     fputws(timestr, file);
     fputws(L"ERROR: ", file);
-    fputws(str, file);
+    fputws(str.c_str(), file);
     fputws(L"\n", file);
 }
 
-void Logger::info(LPCWSTR str)
+void Logger::info(std::wstring str)
 {
     getCurrentTime(timestr);
     fputws(timestr, file);
     fputws(L"INFO: ", file);
-    fputws(str, file);
+    fputws(str.c_str(), file);
     fputws(L"\n", file);
 }
 
