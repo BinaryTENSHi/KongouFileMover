@@ -26,11 +26,11 @@ Configuration::~Configuration()
 {
 }
 
-int Configuration::read(LPCWSTR filename)
+int Configuration::read(LPCWSTR fileName)
 {
     Logger* log = Logger::getInstance();
 
-    HANDLE file = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL , NULL);
+    HANDLE file = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ , NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL , NULL);
 
     if (file == INVALID_HANDLE_VALUE)
         return CONFIG_NOTAVAILABLE;
