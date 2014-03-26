@@ -42,7 +42,8 @@ INT WINAPI WinMain(
     UpdateWindow(windowHandle);
 
     MSG msg;
-    while (GetMessage(&msg, NULL, 0, 0) > 0) {
+    while (GetMessage(&msg, NULL, 0, 0) > 0)
+    {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
@@ -239,7 +240,7 @@ INT WINAPI WinMain(
     {
         log->info(L"Moving is disabled!");
     }
-    
+
     log->stop();
     delete[] path;
     delete folderExp;
@@ -295,17 +296,17 @@ bool initializeWindow(HINSTANCE instance)
 
     windowHandle = CreateWindowEx(
         WS_EX_CLIENTEDGE,
-        className,
-        L"KongouFileMover",
-        WS_POPUP,
-        x,
-        y,
-        240,
-        120,
-        NULL,
-        NULL,
-        instance,
-        NULL);
+                        className,
+                        L"KongouFileMover",
+                        WS_POPUP,
+                        x,
+                        y,
+                        240,
+                        120,
+                        NULL,
+                        NULL,
+                        instance,
+                        NULL);
 
     if (windowHandle == nullptr)
     {
@@ -319,17 +320,17 @@ bool initializeWindow(HINSTANCE instance)
     int height = client_rectangle.bottom - client_rectangle.top;
 
     progressHandle = CreateWindowEx(WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE,
-                                       PROGRESS_CLASS,
-                                       NULL,
-                                       WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
-                                       (width - 220) / 2,
-                                       height - 25,
-                                       220,
-                                       20,
-                                       windowHandle,
-                                       NULL,
-                                       instance,
-                                       NULL);
+                                                    PROGRESS_CLASS,
+                                                    NULL,
+                                                    WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
+                                                    (width - 220) / 2,
+                                                    height - 25,
+                                                    220,
+                                                    20,
+                                                    windowHandle,
+                                                    NULL,
+                                                    instance,
+                                                    NULL);
 
     SendMessage(progressHandle, PBM_SETRANGE, 0, (LPARAM)MAKELPARAM(0, 100));
     SendMessage(progressHandle, PBM_SETPOS, 0, 50);
