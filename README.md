@@ -44,19 +44,18 @@ Trims all leading and trailing spaces from the filename <br>
 >Output: "MyFile.mkv" <br>
 
 ### remove
-Parameters: one: regex<br>
+Parameters: one: regex <br>
 Removes everything that matches the given regular expression <br>
->Config: remove \[.*?\]
+>Config: remove \[.*?\] <br>
 >Input: "[Something]Hello_World[Different].mkv" <br>
 >Output: "Hello_World.mkv" <br>
 
 ### replace
 Parameters: two: regex, 'value'<br>
 Replaces everything that matches the given regular expression with the given value <br>
->Config: replace _,' '
+>Config: replace _,' ' <br>
 >Input: "Hello_World.mkv" <br>
 >Output: "Hello World.mkv" <br>
-
 
 Features
 --------
