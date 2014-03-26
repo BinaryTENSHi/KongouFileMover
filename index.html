@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>KongouFileMover by BinaryTENSHi</title>
-    <link rel="shortcut icon" href="https://github.com/favicon.ico" />
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -33,7 +32,6 @@
       <section>
         <div id="title">
           <h1>KongouFileMover</h1>
-          <img src="images/header.png" alt="Kongou"/>
           <p>Moving and renaming files with ease.</p>
           <hr>
           <span class="credits left">Project maintained by <a href="https://github.com/BinaryTENSHi">BinaryTENSHi</a></span>
@@ -44,6 +42,9 @@
 <a name="kongoufilemover" class="anchor" href="#kongoufilemover"><span class="octicon octicon-link"></span></a>KongouFileMover</h1>
 
 <p><em>A utility program, which moves and renames files based on custom regular expressions.</em></p>
+
+<p><em>Warning: This is my first and (somewhat) usable program written in C++. Please don't cringe about horrible code.</em><br><strong><em>You have been warned</em></strong></p>
+
 <h2>
 <a name="the-idea-behind-kfm" class="anchor" href="#the-idea-behind-kfm"><span class="octicon octicon-link"></span></a>The idea behind KFM</h2>
 
@@ -74,23 +75,51 @@ file {
 }
 </code></pre>
 
-<p>Usable methods:</p>
-
-<ul>
-<li>remove <em>$regex</em></li>
-<li>replace <em>$regex</em>,<em>'$value'</em></li>
-<li>trim <br><em>ignores the file extension</em></li>
-</ul>
-
 <p>Generated folder: "M:\Kill la Kill\Kill la Kill - 23.mkv"</p>
+
+<h2>
+<a name="expressions" class="anchor" href="#expressions"><span class="octicon octicon-link"></span></a>Expressions</h2>
+
+<h3>
+<a name="trim" class="anchor" href="#trim"><span class="octicon octicon-link"></span></a>trim</h3>
+
+<p>Parameters: none <br>
+Trims all leading and trailing spaces from the filename <br><em>This method ignores the file extension</em> <br></p>
+
+<blockquote>
+<p>Input: "   MyFile   .mkv" <br>
+Output: "MyFile.mkv" <br></p>
+</blockquote>
+
+<h3>
+<a name="remove" class="anchor" href="#remove"><span class="octicon octicon-link"></span></a>remove</h3>
+
+<p>Parameters: one: regex <br>
+Removes everything that matches the given regular expression <br></p>
+
+<blockquote>
+<p>Config: remove \[.*?\] <br>
+Input: "[Something]Hello_World[Different].mkv" <br>
+Output: "Hello_World.mkv" <br></p>
+</blockquote>
+
+<h3>
+<a name="replace" class="anchor" href="#replace"><span class="octicon octicon-link"></span></a>replace</h3>
+
+<p>Parameters: two: regex, 'value'<br>
+Replaces everything that matches the given regular expression with the given value <br></p>
+
+<blockquote>
+<p>Config: replace _,' ' <br>
+Input: "Hello_World.mkv" <br>
+Output: "Hello World.mkv" <br></p>
+</blockquote>
 
 <h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
 <ul>
 <li>Custom regular expressions</li>
-<li>Progress notifications as popups</li>
-<li>Switch the graphic on the popup</li>
 </ul><p>Why Kongou you ask? I like the name. That's all.</p>
       </section>
 
