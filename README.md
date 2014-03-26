@@ -46,7 +46,7 @@ Trims all leading and trailing spaces from the filename <br>
 ### remove
 Parameters: one: regex <br>
 Removes everything that matches the given regular expression <br>
->Config: remove \[.*?\] <br>
+>Config: remove \\[.*?\\] <br>
 >Input: "[Something]Hello_World[Different].mkv" <br>
 >Output: "Hello_World.mkv" <br>
 
