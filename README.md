@@ -32,18 +32,34 @@ file {
  trim
 }
 ```
-Usable methods:
-- remove *$regex*
-- replace *$regex*,*'$value'*
-- trim
-  *ignores the file extension*
-
 Generated folder: "M:\Kill la Kill\Kill la Kill - 23.mkv"
+
+Expressions
+-----------
+### trim
+Parameters: none <br>
+Trims all leading and trailing spaces from the filename <br>
+*This method ignores the file extension* <br>
+>Input: " &nbsp; MyFile &nbsp; .mkv" <br>
+>Output: "MyFile.mkv" <br>
+
+### remove
+Parameters: one: regex<br>
+Removes everything that matches the given regular expression <br>
+>Config: remove \[.*?\]
+>Input: "[Something]Hello_World[Different].mkv" <br>
+>Output: "Hello_World.mkv" <br>
+
+### replace
+Parameters: two: regex, 'value'<br>
+Replaces everything that matches the given regular expression with the given value <br>
+>Config: replace _,' '
+>Input: "Hello_World.mkv" <br>
+>Output: "Hello World.mkv" <br>
+
 
 Features
 --------
 - Custom regular expressions
-- Progress notifications as popups
-- Switch the graphic on the popup
 
 Why Kongou you ask? I like the name. That's all.
