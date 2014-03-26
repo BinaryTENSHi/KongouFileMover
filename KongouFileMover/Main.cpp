@@ -42,12 +42,6 @@ INT WINAPI WinMain(
         }
     }
 
-    if (!hasFile)
-    {
-        printUsage();
-        return 1;
-    }
-
     std::wstring oriPath(args[argcount - 1]);
     std::wstring oriFile(oriPath.substr(oriPath.find_last_of(L"\\") + 1, oriPath.length()));
 
@@ -106,6 +100,12 @@ INT WINAPI WinMain(
             MessageBox(NULL, L"No file expressions configured.", L"Configuration", MB_OK | MB_ICONINFORMATION);
             return 1;
         }
+    }
+
+    if (!hasFile)
+    {
+        printUsage();
+        return 1;
     }
 
     log->info(L"Config read. Interpreting folder expressions.");
