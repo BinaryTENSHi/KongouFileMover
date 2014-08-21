@@ -21,6 +21,9 @@
     <ClCompile Include="GlobalData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConfigurationReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -33,13 +36,19 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="GlobalData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigurationReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.json">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

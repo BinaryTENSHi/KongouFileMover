@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigurationReader.cpp" />
     <ClCompile Include="GlobalData.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -158,13 +159,15 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini" />
+    <None Include="config.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConfigurationReader.h" />
     <ClInclude Include="GlobalData.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

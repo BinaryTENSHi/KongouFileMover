@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include <boost\program_options.hpp>
+#include <boost/program_options.hpp>
 
 #include "GlobalData.h"
+#include "ConfigurationReader.h"
 
 namespace po = boost::program_options;
 
@@ -47,13 +48,33 @@ int main(int argc, char* argv[])
     if (vm.count("test"))
     {
         std::cout << "Test argument supplied. Will not move files." << std::endl;
+        std::cout << "Hmpf. You're the boss." << std::endl;
         TEST = true;
     }
 
     if (paths.empty())
     {
         std::cout << "No path to a file or directory given." << std::endl;
+        std::cout << "What should I process if you don't give me anything?" << std::endl;
         return 1;
+    }
+
+    ConfigurationReader reader(configPath);
+
+    switch (reader.state)
+    {
+    case ConfigurationState::FileNotReadable:
+    {
+        std::cout << "Couldn't read configuration file " + configPath + "." << std::endl;
+        std::cout << "Don't tell me you borked up the permissions again." << std::endl;
+        return 1;
+    }
+    case ConfigurationState::FileNotActuallyAFile:
+    {
+        std::cout << "Configuration file " + configPath + " is not actuall a file." << std::endl;
+        std::cout << "Why are you trying to trick me?" << std::endl;
+        return 1;
+    }
     }
 }
 
@@ -66,7 +87,7 @@ void setupAndParseArguments(int argc, char* argv[])
     optional.add_options()
         ("test,t", "Do not move files")
         ("verbose,v", "Provide verbose output")
-        ("config,c", po::value<std::string>(&configPath)->default_value("config.ini"), "Specify configuration file");
+        ("config,c", po::value<std::string>(&configPath)->default_value("config.json"), "Specify configuration file");
 
     hidden.add_options()
         ("input,i", po::value<std::vector<std::string>>(&paths), "Path to files or directories");
@@ -89,5 +110,6 @@ void printUsage()
 void printVersion()
 {
     std::cout << "KongouFileMover v1.0.0.0" << std::endl;
-    std::cout << "   @BinaryTENSHi 2014   " << std::endl;
+    std::cout << "   @BinaryTENSHi 2014   " << std::endl << std::endl;
+    std::cout << "Thanks for using KFM. <3" << std::endl;
 }
