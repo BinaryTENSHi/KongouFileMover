@@ -1,221 +1,93 @@
-#include <windows.h>
-#include <shlwapi.h>
+#include <iostream>
+#include <string>
 
-#include "Logger.h"
-#include "Configuration.h"
-#include "Resource.h"
-#include "Expression.h"
+#include <boost\program_options.hpp>
 
+#include "GlobalData.h"
+
+namespace po = boost::program_options;
+
+void setupAndParseArguments(int argc, char* argv[]);
 void printUsage();
+void printVersion();
 
-INT WINAPI WinMain(
-    _In_ HINSTANCE instance,
-         _In_opt_ HINSTANCE previousInstance,
-         _In_ LPSTR commandline,
-         _In_ INT showCommand)
+std::string configPath;
+std::vector<std::string> paths;
+
+po::options_description generic("Generic options");
+po::options_description optional("Optional options");
+po::options_description hidden("Hidden options");
+
+po::options_description visible("Allowed options");
+
+po::variables_map vm;
+
+int main(int argc, char* argv[])
 {
-    bool move = false;
-    bool hasFile = false;
-    int argcount;
-    LPWSTR* args = CommandLineToArgvW(GetCommandLine(), &argcount);
+    setupAndParseArguments(argc, argv);
 
-    static Logger* log = Logger::getInstance();
-    static Configuration* config = Configuration::getInstance();
-
-    log->start();
-
-    wchar_t* configFile = L"config.ini";
-
-    for (int i = 1; i < argcount; ++i)
+    if (vm.count("version"))
     {
-        if (wcsncmp(args[i], L"-c:", 3) == 0)
-        {
-            log->info(L"Using " + std::wstring(configFile) + L" as root folder");
-        }
-        else if (wcsncmp(args[i], L"-x", 2) == 0)
-        {
-            move = true;
-        }
-        else
-        {
-            hasFile = true;
-        }
+        printVersion();
+        return 0;
     }
 
-    std::wstring oriPath(args[argcount - 1]);
-    std::wstring oriFile(oriPath.substr(oriPath.find_last_of(L"\\") + 1, oriPath.length()));
-
-    LocalFree(args);
-
-    int res = config->read(configFile);
-    switch (res)
-    {
-    case CONFIG_NOTAVAILABLE:
-        {
-            HRSRC resourceInfo = FindResource(instance, MAKEINTRESOURCE(IDR_TEXT_DEFAULTCONFIG), L"TEXT");
-            if (!resourceInfo)
-            {
-                MessageBox(NULL, L"Default configuration not found.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-                return 1;
-            }
-
-            HGLOBAL resource = LoadResource(instance, resourceInfo);
-            if (!resource)
-            {
-                MessageBox(NULL, L"Resource could not loaded.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-                return 1;
-            }
-
-            LPVOID memory = LockResource(resource);
-            DWORD size = SizeofResource(instance, resourceInfo);
-            DWORD written = -1;
-
-            HANDLE file = CreateFile(configFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL , NULL);
-            WriteFile(file, resource, size, &written, NULL);
-            CloseHandle(file);
-            FreeResource(resource);
-
-            MessageBox(NULL, L"Configuration created. Please edit it.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-            return 0;
-        }
-
-    case CONFIG_NOTREAD:
-        {
-            MessageBox(NULL, L"Configuration could not be read.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-            return 1;
-        }
-
-    case CONFIG_NOROOT:
-        {
-            MessageBox(NULL, L"Root folder not configured or doesn't exist.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-            return 1;
-        }
-    case CONFIG_NOFOLDER:
-        {
-            MessageBox(NULL, L"No folder expressions configured.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-            return 1;
-        }
-    case CONFIG_NOFILE:
-        {
-            MessageBox(NULL, L"No file expressions configured.", L"Configuration", MB_OK | MB_ICONINFORMATION);
-            return 1;
-        }
-    }
-
-    if (!hasFile)
+    if (vm.count("help"))
     {
         printUsage();
         return 1;
     }
 
-    log->info(L"Config read. Interpreting folder expressions.");
-    Expression* folderExp = new Expression;
-    res = folderExp->compile(config->folderContent);
+    if (vm.count("verbose"))
+        VERBOSE = true;
 
-    switch (res)
+    if (vm.count("config"))
+        std::cout << "Using configuration " << configPath << std::endl;
+
+    if (vm.count("test"))
     {
-    case EXPR_OK:
-        {
-            log->info(L"Found the following folder expressions:");
-            std::vector<std::wstring>::iterator it = folderExp->expressions.end();
-            while (it != folderExp->expressions.begin())
-            {
-                --it;
-                log->info((*it).c_str());
-            }
-            break;
-        }
-    case EXPR_ERROR_REM:
-        {
-            log->error(L"A remove expression is not correct. (remove $regex)");
-            return 1;
-        }
-    case EXPR_ERROR_REP:
-        {
-            log->error(L"A replace expression is not correct. (replace $regex,'$value')");
-            return 1;
-        }
+        std::cout << "Test argument supplied. Will not move files." << std::endl;
+        TEST = true;
     }
 
-    log->info(L"Interpreting file expressions.");
-    Expression* fileExp = new Expression;
-    res = fileExp->compile(config->fileContent);
-
-    switch (res)
+    if (paths.empty())
     {
-    case EXPR_OK:
-        {
-            log->info(L"Found the following file expressions:");
-            std::vector<std::wstring>::iterator it = fileExp->expressions.end();
-            while (it != fileExp->expressions.begin())
-            {
-                --it;
-                log->info((*it).c_str());
-            }
-            break;
-        }
-    case EXPR_ERROR_REM:
-        {
-            log->error(L"A remove expression is not correct. (remove $regex)");
-            return 1;
-        }
-    case EXPR_ERROR_REP:
-        {
-            log->error(L"A replace expression is not correct. (replace $regex,'$value'");
-            return 1;
-        }
+        std::cout << "No path to a file or directory given." << std::endl;
+        return 1;
     }
+}
 
-    log->info(L"Processing file " + oriPath);
+void setupAndParseArguments(int argc, char* argv[])
+{
+    generic.add_options()
+        ("version", "Print current version")
+        ("help,h", "Print this");
 
-    std::wstring folder(oriFile);
-    folderExp->run(folder);
-    log->info(L"Resulting folder: " + folder);
+    optional.add_options()
+        ("test,t", "Do not move files")
+        ("verbose,v", "Provide verbose output")
+        ("config,c", po::value<std::string>(&configPath)->default_value("config.ini"), "Specify configuration file");
 
-    std::wstring file(oriFile);
-    fileExp->run(file);
-    log->info(L"Resulting file: " + file);
+    hidden.add_options()
+        ("input,i", po::value<std::vector<std::string>>(&paths), "Path to files or directories");
 
-    wchar_t* path = new wchar_t[520];
-    PathCombine(path, config->rootFolder.c_str(), folder.c_str());
-    log->info(path);
+    po::options_description cmdline;
+    cmdline.add(generic).add(optional).add(hidden);
+    visible.add(generic).add(optional);
 
-    if (!PathFileExists(path))
-    {
-        if (move)
-        {
-            log->info(L"Creating folder...");
-            if (!CreateDirectory(path, NULL))
-            {
-                log->error(L"Could not create directory");
-                return 1;
-            }
-        }
-    }
-
-    PathCombine(path, path, file.c_str());
-    log->info(path);
-
-    if (move)
-    {
-        log->info(L"Moving file...");
-    }
-    else
-    {
-        log->info(L"Moving is disabled!");
-    }
-
-    log->stop();
-    delete[] path;
-    delete folderExp;
-    delete fileExp;
-    return 0;
+    po::positional_options_description p;
+    p.add("input", -1);
+    po::store(po::command_line_parser(argc, argv).options(cmdline).positional(p).run(), vm);
+    po::notify(vm);
 }
 
 void printUsage()
 {
-    MessageBox(NULL,
-                   L"KongouFileMover.exe [-c:configfile] [-x] %filename%",
-                   L"KongouFileMover usage",
-                   MB_OK | MB_ICONINFORMATION);
+    std::cout << visible << std::endl;
+}
+
+void printVersion()
+{
+    std::cout << "KongouFileMover v1.0.0.0" << std::endl;
+    std::cout << "   @BinaryTENSHi 2014   " << std::endl;
 }
