@@ -1,6 +1,6 @@
 #pragma once
 
-enum ConfigurationState
+enum class ConfigurationState
 {
     OK,
     FileNotReadable,

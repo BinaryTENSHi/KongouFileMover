@@ -6,6 +6,7 @@
 #include "GlobalData.h"
 #include "ConfigurationReader.h"
 #include "FileNameHandler.h"
+#include "FileNameRegexer.h"
 
 namespace po = boost::program_options;
 
@@ -79,6 +80,33 @@ int main(int argc, char* argv[])
     }
 
     FileNameHandler handler(&paths, reader.config);
+
+    switch (handler.state)
+    {
+    case FilesState::NoFiles:
+    {
+        std::cout << "Couldn't find any input files." << std::endl;
+        std::cout << "No input <=> no output. Simple as that." << std::endl;
+        return 1;
+    }
+    }
+
+    FileNameRegexer regexer(reader.config);
+
+    switch (regexer.state)
+    {
+    case RegexState::Errors:
+    {
+        std::cout << "Couldn't parse configured regexes." << std::endl;
+        std::cout << "Master hasn't granted me to show what went wrong yet." << std::endl;
+        return 1;
+    }
+    case RegexState::NoRegex:
+    {
+        std::cout << "No regexes defined." << std::endl;
+        std::cout << "This is the main feature. How in the world did you forget it?" << std::endl;
+    }
+    }
 }
 
 void setupAndParseArguments(int argc, char* argv[])

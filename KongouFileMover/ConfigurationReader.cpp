@@ -35,10 +35,10 @@ ConfigurationReader::ConfigurationReader(std::string configPath)
 
     config.root = pt.get<std::string>("root");
 
-    BOOST_FOREACH(pt::ptree::value_type &v, pt.get_child("folderRegex"))
+    for (pt::ptree::value_type &v : pt.get_child("folderRegex"))
         config.folderRegex.push_back(v.second.data());
 
-    BOOST_FOREACH(pt::ptree::value_type &v, pt.get_child("fileRegex"))
+    for (pt::ptree::value_type &v : pt.get_child("fileRegex"))
         config.fileRegex.push_back(v.second.data());
 }
 
