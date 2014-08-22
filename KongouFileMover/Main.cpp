@@ -5,6 +5,7 @@
 
 #include "GlobalData.h"
 #include "ConfigurationReader.h"
+#include "FileNameHandler.h"
 
 namespace po = boost::program_options;
 
@@ -76,6 +77,8 @@ int main(int argc, char* argv[])
         return 1;
     }
     }
+
+    FileNameHandler handler(&paths, reader.config);
 }
 
 void setupAndParseArguments(int argc, char* argv[])
