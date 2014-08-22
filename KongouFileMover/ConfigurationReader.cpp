@@ -33,15 +33,13 @@ ConfigurationReader::ConfigurationReader(std::string configPath)
     read_json(s, pt);
     s.close();
 
-    std::string root = pt.get<std::string>("root");
-    std::vector<std::string> folderRegex;
-    std::vector<std::string> fileRegex;
+    config.root = pt.get<std::string>("root");
 
     BOOST_FOREACH(pt::ptree::value_type &v, pt.get_child("folderRegex"))
-        folderRegex.push_back(v.second.data());
+        config.folderRegex.push_back(v.second.data());
 
     BOOST_FOREACH(pt::ptree::value_type &v, pt.get_child("fileRegex"))
-        fileRegex.push_back(v.second.data());
+        config.fileRegex.push_back(v.second.data());
 }
 
 ConfigurationReader::~ConfigurationReader()

@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
     }
     case ConfigurationState::FileNotActuallyAFile:
     {
-        std::cout << "Configuration file " + configPath + " is not actuall a file." << std::endl;
+        std::cout << "Configuration file " + configPath + " is not actually a file." << std::endl;
         std::cout << "Why are you trying to trick me?" << std::endl;
         return 1;
     }
@@ -85,7 +85,7 @@ void setupAndParseArguments(int argc, char* argv[])
         ("help,h", "Print this");
 
     optional.add_options()
-        ("test,t", "Do not move files")
+        ("test,t", "Do not physically move files")
         ("verbose,v", "Provide verbose output")
         ("config,c", po::value<std::string>(&configPath)->default_value("config.json"), "Specify configuration file");
 
