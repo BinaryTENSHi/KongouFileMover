@@ -21,15 +21,17 @@ Example
 File name: "[HorribleSubs] Kill la Kill - 23 [1080p].mkv"<br>
 Configuration:<br>
 ```
-root=M:\
-folder {
- remove \[.*?\]
- remove \s-\s.*
- trim
-}
-file {
- remove \[.*?\]
- trim
+{
+   "root":"M:\\",
+   "folderRegex":[
+      "remove \\[.*?\\]",
+      "remove \\s-\\s.*",
+      "trim"
+   ],
+   "fileRegex":[
+      "remove \\[.*?\\]",
+      "trim"
+   ]
 }
 ```
 Generated folder: "M:\Kill la Kill\Kill la Kill - 23.mkv"
@@ -39,14 +41,13 @@ Expressions
 ### trim
 Parameters: none <br>
 Trims all leading and trailing spaces from the filename <br>
-*This method ignores the file extension* <br>
 >Input: " &nbsp; MyFile &nbsp; .mkv" <br>
 >Output: "MyFile.mkv" <br>
 
 ### remove
 Parameters: one: regex <br>
 Removes everything that matches the given regular expression <br>
->Config: remove \\[.*?\\] <br>
+>Config: remove \\\\[.*?\\\\] <br>
 >Input: "[Something]Hello_World[Different].mkv" <br>
 >Output: "Hello_World.mkv" <br>
 
@@ -56,6 +57,29 @@ Replaces everything that matches the given regular expression with the given val
 >Config: replace _,' ' <br>
 >Input: "Hello_World.mkv" <br>
 >Output: "Hello World.mkv" <br>
+
+Libraries
+---------
+KFM requires the following libraries:
+- Boost (version 1.56.0)
+ - system
+ - filesystem
+ - regex
+ - program_options
+
+Building
+--------
+KFM utilizes [CMake](http://www.cmake.org/) for building.
+The procedure to clone and build KFM could be the following:
+```
+> git clone https://github.com/BinaryTENSHi/KongouFileMover.git
+> cd KongouFileMover
+> mkdir build
+> cd build
+> cmake ..
+> make
+```
+The built binary can be found at build/KongouFileMover/kongoufilemover(.exe|)
 
 Features
 --------
