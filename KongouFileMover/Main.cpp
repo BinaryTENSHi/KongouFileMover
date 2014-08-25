@@ -8,6 +8,7 @@
 #include "FileNameHandler.h"
 
 namespace po = boost::program_options;
+namespace sy = boost::system;
 
 void setupAndParseArguments(int argc, char* argv[]);
 void printUsage();
@@ -102,6 +103,27 @@ int main(int argc, char* argv[])
     }
 
     handler.process();
+    std::vector<FileRename>::iterator i = handler.fileRenames.begin();
+
+    do
+    {
+        if (!fs::exists(i->destDirectory))
+        {
+            std::cout << "Destination directory does not exist. Creating... " << std::endl;
+            fs::create_directories(i->destDirectory);
+        }
+
+        fs::path newFile = fs::path(i->destDirectory) / i->destFileName;
+        std::cout << "Moving file " << i->srcFile << " to " << newFile << std::endl;
+
+        if (TEST)
+        {
+            std::cout << "Just kidding. I'm not moving anything in this mode." << std::endl;
+            continue;
+        }
+
+        fs::rename(i->srcFile, newFile);
+    } while (++i != handler.fileRenames.end());
 }
 
 void setupAndParseArguments(int argc, char* argv[])
