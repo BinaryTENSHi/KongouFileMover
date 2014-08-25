@@ -154,7 +154,6 @@
   <ItemGroup>
     <ClCompile Include="ConfigurationReader.cpp" />
     <ClCompile Include="FileNameHandler.cpp" />
-    <ClCompile Include="FileNameRegexer.cpp" />
     <ClCompile Include="GlobalData.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -172,9 +171,7 @@
     <ClInclude Include="ConfigurationReader.h" />
     <ClInclude Include="ConfigurationState.h" />
     <ClInclude Include="FileNameHandler.h" />
-    <ClInclude Include="FileNameRegexer.h" />
     <ClInclude Include="FileRename.h" />
-    <ClInclude Include="FilesState.h" />
     <ClInclude Include="GlobalData.h" />
     <ClInclude Include="KRegex.h" />
     <ClInclude Include="RegexState.h" />

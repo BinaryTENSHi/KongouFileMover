@@ -1,9 +1,13 @@
 #pragma once
 
-#include<string>
+#include <string>
+
+#include <boost/filesystem.hpp>
+namespace fs = boost::filesystem;
 
 struct FileRename
 {
-    std::string oldPath;
-    std::string newPath;
+    fs::path srcFile;
+    fs::path destDirectory;
+    std::string destFileName;
 };
