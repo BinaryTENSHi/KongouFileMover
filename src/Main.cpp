@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 #include <boost/program_options.hpp>
 
@@ -10,8 +9,10 @@
 namespace po = boost::program_options;
 namespace sy = boost::system;
 
-void setupAndParseArguments(int argc, char* argv[]);
+void setupAndParseArguments(int argc, char *argv[]);
+
 void printUsage();
+
 void printVersion();
 
 std::string configPath;
@@ -25,7 +26,7 @@ po::options_description visible("Allowed options");
 
 po::variables_map vm;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     setupAndParseArguments(argc, argv);
 
@@ -65,41 +66,45 @@ int main(int argc, char* argv[])
 
     switch (reader.state)
     {
-    case ConfigurationState::FileNotReadable:
-    {
-        std::cout << "Couldn't read configuration file " + configPath + "." << std::endl;
-        std::cout << "Don't tell me you borked up the permissions again." << std::endl;
-        return 1;
-    }
-    case ConfigurationState::FileNotActuallyAFile:
-    {
-        std::cout << "Configuration file " + configPath + " is not actually a file." << std::endl;
-        std::cout << "Why are you trying to trick me?" << std::endl;
-        return 1;
-    }
+        case ConfigurationState::FileNotReadable:
+        {
+            std::cout << "Couldn't read configuration file " + configPath + "." << std::endl;
+            std::cout << "Don't tell me you borked up the permissions again." << std::endl;
+            return 1;
+        }
+        case ConfigurationState::FileNotActuallyAFile:
+        {
+            std::cout << "Configuration file " + configPath + " is not actually a file." << std::endl;
+            std::cout << "Why are you trying to trick me?" << std::endl;
+            return 1;
+        }
+        case ConfigurationState::OK:
+            break;
     }
 
     FileNameHandler handler(&paths, reader.config);
 
     switch (handler.state)
     {
-    case RegexState::NoFiles:
-    {
-        std::cout << "Couldn't find any input files." << std::endl;
-        std::cout << "No input == no output. Simple as that." << std::endl;
-        return 1;
-    }
-    case RegexState::Errors:
-    {
-        std::cout << "Couldn't parse configured regexes." << std::endl;
-        std::cout << "Master hasn't granted me to show what went wrong yet." << std::endl;
-        return 1;
-    }
-    case RegexState::NoRegex:
-    {
-        std::cout << "No regexes defined." << std::endl;
-        std::cout << "This is the main feature. How in the world did you forget it?" << std::endl;
-    }
+        case RegexState::NoFiles:
+        {
+            std::cout << "Couldn't find any input files." << std::endl;
+            std::cout << "No input == no output. Simple as that." << std::endl;
+            return 1;
+        }
+        case RegexState::Errors:
+        {
+            std::cout << "Couldn't parse configured regexes." << std::endl;
+            std::cout << "Master hasn't granted me to show what went wrong yet." << std::endl;
+            return 1;
+        }
+        case RegexState::NoRegex:
+        {
+            std::cout << "No regexes defined." << std::endl;
+            std::cout << "This is the main feature. How in the world did you forget it?" << std::endl;
+        }
+        case RegexState::OK:
+            break;
     }
 
     handler.process();
@@ -124,21 +129,23 @@ int main(int argc, char* argv[])
 
         fs::rename(i->srcFile, newFile);
     } while (++i != handler.fileRenames.end());
+
+    return 0;
 }
 
-void setupAndParseArguments(int argc, char* argv[])
+void setupAndParseArguments(int argc, char *argv[])
 {
     generic.add_options()
-        ("version", "Print current version")
-        ("help,h", "Print this");
+            ("version", "Print current version")
+            ("help,h", "Print this");
 
     optional.add_options()
-        ("test,t", "Do not physically move files")
-        ("verbose,v", "Provide verbose output")
-        ("config,c", po::value<std::string>(&configPath)->default_value("config.json"), "Specify configuration file");
+            ("test,t", "Do not physically move files")
+            ("verbose,v", "Provide verbose output")
+            ("config,c", po::value<std::string>(&configPath)->default_value("config.json"), "Specify configuration file");
 
     hidden.add_options()
-        ("input,i", po::value<std::vector<std::string>>(&paths), "Path to files or directories");
+            ("input,i", po::value<std::vector<std::string>>(&paths), "Path to files or directories");
 
     po::options_description cmdline;
     cmdline.add(generic).add(optional).add(hidden);
@@ -157,7 +164,7 @@ void printUsage()
 
 void printVersion()
 {
-    std::cout << "KongouFileMover v1.0.0.0" << std::endl;
+    std::cout << "KongouFileMover v1.1.0.0" << std::endl;
     std::cout << "   @BinaryTENSHi 2014   " << std::endl << std::endl;
     std::cout << "Thanks for using KFM. <3" << std::endl;
 }

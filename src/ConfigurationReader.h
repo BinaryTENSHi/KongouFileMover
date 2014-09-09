@@ -10,7 +10,9 @@ class ConfigurationReader
 {
 public:
     ConfigurationReader(std::string configPath);
+
     ~ConfigurationReader();
+
     ConfigurationState state = ConfigurationState::OK;
     Configuration config;
 };

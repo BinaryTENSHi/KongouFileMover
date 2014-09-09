@@ -53,23 +53,23 @@ std::string FileNameHandler::applyRegexes(fs::directory_entry file, std::vector<
     {
         switch (i->type)
         {
-        case RegexType::Trim:
-        {
-            al::trim(name);
-            break;
-        }
-        case RegexType::Remove:
-        {
-            boost::regex reg(i->arguments[0]);
-            name = boost::regex_replace(name, reg, "");
-            break;
-        }
-        case RegexType::Replace:
-        {
-            boost::regex reg(i->arguments[0]);
-            name = boost::regex_replace(name, reg, i->arguments[1]);
-            break;
-        }
+            case RegexType::Trim:
+            {
+                al::trim(name);
+                break;
+            }
+            case RegexType::Remove:
+            {
+                boost::regex reg(i->arguments[0]);
+                name = boost::regex_replace(name, reg, "");
+                break;
+            }
+            case RegexType::Replace:
+            {
+                boost::regex reg(i->arguments[0]);
+                name = boost::regex_replace(name, reg, i->arguments[1]);
+                break;
+            }
         }
     } while (++i != regexes->end());
     return name;

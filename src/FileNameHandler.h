@@ -9,13 +9,16 @@
 #include "KRegex.h"
 
 #include <boost/filesystem.hpp>
+
 namespace fs = boost::filesystem;
 
 class FileNameHandler
 {
 public:
     FileNameHandler(std::vector<std::string> *paths, Configuration config);
+
     ~FileNameHandler();
+
     std::vector<FileRename> fileRenames;
     RegexState state = RegexState::OK;
 
@@ -24,6 +27,7 @@ public:
 
 private:
     void parseRegexes(std::vector<std::string> source, std::vector<KRegex> *dest);
+
     std::string applyRegexes(fs::directory_entry file, std::vector<KRegex> *regexes);
 
 private:

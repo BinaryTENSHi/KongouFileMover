@@ -1,0 +1,12 @@
+{
+    "root": "toor",
+    "folderRegex": [
+        "remove \\[.*?\\]",
+        "remove \\s-\\s.*",
+        "trim"
+    ],
+    "fileRegex": [
+        "remove \\[.*?\\]",
+        "trim"
+    ]
+}

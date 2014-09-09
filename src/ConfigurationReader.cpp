@@ -4,9 +4,9 @@
 #include <iostream>
 
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
 
 namespace fs = boost::filesystem;
 namespace pt = boost::property_tree;
@@ -27,7 +27,7 @@ ConfigurationReader::ConfigurationReader(std::string configPath)
         return;
     }
 
-    std::ifstream s(path.c_str());
+    fs::ifstream s(path);
     pt::ptree pt;
 
     read_json(s, pt);
