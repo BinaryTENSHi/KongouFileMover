@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>KongouFileMover by BinaryTENSHi</title>
-    <link rel="shortcut icon" href="https://github.com/favicon.ico" />
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -33,7 +32,6 @@
       <section>
         <div id="title">
           <h1>KongouFileMover</h1>
-          <img src="images/header.png" alt="Kongou"/>
           <p>Moving and renaming files with ease.</p>
           <hr>
           <span class="credits left">Project maintained by <a href="https://github.com/BinaryTENSHi">BinaryTENSHi</a></span>
@@ -65,15 +63,17 @@ Since I have a dedicated partition with all my series on it, I wanted to automat
 <p>File name: "[HorribleSubs] Kill la Kill - 23 [1080p].mkv"<br>
 Configuration:<br></p>
 
-<pre><code>root=M:\
-folder {
- remove \[.*?\]
- remove \s-\s.*
- trim
-}
-file {
- remove \[.*?\]
- trim
+<pre><code>{
+   "root":"M:\\",
+   "folderRegex":[
+      "remove \\[.*?\\]",
+      "remove \\s-\\s.*",
+      "trim"
+   ],
+   "fileRegex":[
+      "remove \\[.*?\\]",
+      "trim"
+   ]
 }
 </code></pre>
 
@@ -86,7 +86,7 @@ file {
 <a name="trim" class="anchor" href="#trim"><span class="octicon octicon-link"></span></a>trim</h3>
 
 <p>Parameters: none <br>
-Trims all leading and trailing spaces from the filename <br><em>This method ignores the file extension</em> <br></p>
+Trims all leading and trailing spaces from the filename <br></p>
 
 <blockquote>
 <p>Input: "   MyFile   .mkv" <br>
@@ -100,7 +100,7 @@ Output: "MyFile.mkv" <br></p>
 Removes everything that matches the given regular expression <br></p>
 
 <blockquote>
-<p>Config: remove \[.*?\] <br>
+<p>Config: remove \\[.*?\\] <br>
 Input: "[Something]Hello_World[Different].mkv" <br>
 Output: "Hello_World.mkv" <br></p>
 </blockquote>
@@ -116,6 +116,37 @@ Replaces everything that matches the given regular expression with the given val
 Input: "Hello_World.mkv" <br>
 Output: "Hello World.mkv" <br></p>
 </blockquote>
+
+<h2>
+<a name="libraries" class="anchor" href="#libraries"><span class="octicon octicon-link"></span></a>Libraries</h2>
+
+<p>KFM requires the following libraries:</p>
+
+<ul>
+<li>Boost (version 1.56.0)
+
+<ul>
+<li>system</li>
+<li>filesystem</li>
+<li>regex</li>
+<li>program_options</li>
+</ul>
+</li>
+</ul><h2>
+<a name="building" class="anchor" href="#building"><span class="octicon octicon-link"></span></a>Building</h2>
+
+<p>KFM utilizes <a href="http://www.cmake.org/">CMake</a> for building.
+The procedure to clone and build KFM could be the following:</p>
+
+<pre><code>&gt; git clone https://github.com/BinaryTENSHi/KongouFileMover.git
+&gt; cd KongouFileMover
+&gt; mkdir build
+&gt; cd build
+&gt; cmake ..
+&gt; make
+</code></pre>
+
+<p>The built binary can be found at build/KongouFileMover/kongoufilemover(.exe|)</p>
 
 <h2>
 <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
