@@ -6,6 +6,10 @@ KongouFileMover
 *Warning: This is my first and (somewhat) usable program written in C++. Please don't cringe about horrible code.*<br>
 ***You have been warned***
 
+Travis build status
+-------------------
+[![Build Status](https://travis-ci.org/BinaryTENSHi/KongouFileMover.svg?branch=master)](https://travis-ci.org/BinaryTENSHi/KongouFileMover)
+
 The idea behind KFM
 -------------------
 Whenever I've downloaded Anime episodes with uTorrent (*don't sue me*), some things bugged me.<br>
